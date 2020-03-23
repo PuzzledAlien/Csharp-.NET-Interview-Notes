@@ -25,3 +25,98 @@ WHERE X.SSEX=' 男'AND X.SAGE >ALL (SELECT SAGE FROM S AS Y WHERE
 Y.SSEX=' 女')
 ```
 
+### 2.求年龄大于女同学平均年龄的男学生姓名和年龄。
+
+```mssql
+SELECT SNAME,SAGE
+FROM S
+WHERE SSEX=' 男'
+AND SAGE>(SELECT AVG(SAGE) FROM S WHERE SSEX='女')
+```
+
+### 3.在 SC 中检索成绩为空值的学生学号和课程号。
+
+```mssql
+SELECT Sno,Cno FROM SC WHERE GRADE IS NULL
+```
+
+### 4.检索姓名以 WANG 打头的所有学生的姓名和年龄。
+
+```mssql
+SELECT SNAME,SAGE FROM S
+WHERE SNAME LIKE 'WANG%'
+```
+
+### 5.检索学号比 WANG 同学大，而年龄比他小的学生姓名。
+
+```mssql
+SELECT X.SNAME FROM S AS X, S AS Y
+WHERE Y.SNAME='WANG' AND X.Sno>Y.Sno AND X.SAGE<Y.SAGE
+```
+
+或
+
+```mssql
+SELECT SNAME
+FROM s
+WHERE sno>(SELECT sno FROM s WHERE SNAME='WANG') 
+AND SAGE<(SELECT sAGE FROM s WHERE SNAME='WANG')
+```
+
+### 6.统计每门课程的学生选修人数 （超过 2 人的课程才统计） 。要求输出课程号和选修人数，查询结果按人数降序排列，若人数相同，按课程号升序排列。
+
+```mssql
+SELECT DISTINCT Cno,COUNT(Sno) 
+FROM SC
+GROUP BY Cno 
+HAVING COUNT(Sno)>2
+ORDER BY 2 DESC, Cno ASC
+```
+
+或
+
+```mssql
+SELECT DISTINCT Cno,COUNT(Sno) AS 人数
+FROM SC 
+GROUP BY Cno
+HAVING COUNT(Sno)>2
+ORDER BY 人数 DESC, Cno ASC
+```
+
+### 7.求 LIU 老师所授课程的每门课程的学生平均成绩。
+
+```mssql
+SELECT AVG(GRADE)
+FROM SC JOIN C ON SC.Cno=C.Cno WHERE TEACHER='liu'
+GROUP BY c.Cno
+```
+
+或
+
+```mssql
+SELECT CNAME,AVG(GRADE) FROM SC,C 
+WHERE SC.Cno=C.Cno AND TEACHER='liu'
+GROUP BY c.Cno,cname
+```
+
+### 8.求选修 C4 课程的学生的平均年龄。
+
+```mssql
+SELECT AVG(SAGE)
+FROM S WHERE Sno
+IN(SELECT Sno FROM SC WHERE Cno='4')
+```
+
+或
+
+```mssql
+SELECT AVG(SAGE)
+FROM S,SC WHERE S.Sno=SC.Sno AND Cno='4'
+```
+
+### 9.统计有学生选修的课程门数。
+
+```mssql
+SELECT COUNT(DISTINCT Cno) FROM SC
+```
+
