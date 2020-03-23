@@ -1,6 +1,6 @@
 ## 关系型数据库
 
-[MSSQL](/MSSQL.md)
+[MSSQL](./MSSQL.md)
 
 
 
