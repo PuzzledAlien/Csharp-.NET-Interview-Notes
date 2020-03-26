@@ -128,3 +128,14 @@ FROM S,SC WHERE S.Sno=SC.Sno AND Cno='4'
 SELECT COUNT(DISTINCT Cno) FROM SC
 ```
 
+## 二、试用 SQL 更新语句表达对教学数据库中三个基本表 S、SC 、C的各个更新操作
+
+要求用 SQL 更新语句实现如下处理：
+
+### 1 ．在基本表 SC 中修改 4 号课程的成绩，若成绩小于等于 75 分时提高 5% ， 若成绩大于 75 分时提高 4% （用两个 UPDATE 语句实现）。
+
+```mssql
+UPDATE SC SET GRADE=GRADE*1.05 WHERE Cno='4' AND GRADE<=75;
+UPDATE SC SET GRADE=GRADE*1.04 WHERE Cno='4' AND GRADE>75;
+```
+
