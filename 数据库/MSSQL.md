@@ -10,6 +10,8 @@
   - [7.求 LIU 老师所授课程的每门课程的学生平均成绩。](#7求-liu-老师所授课程的每门课程的学生平均成绩)
   - [8.求选修 C4 课程的学生的平均年龄。](#8求选修-c4-课程的学生的平均年龄)
   - [9.统计有学生选修的课程门数。](#9统计有学生选修的课程门数)
+- [二、试用 SQL 更新语句表达对教学数据库中三个基本表 S、SC 、C的各个更新操作](#二试用-sql-更新语句表达对教学数据库中三个基本表-ssc-c的各个更新操作)
+  - [1 ．在基本表 SC 中修改 4 号课程的成绩，若成绩小于等于 75 分时提高 5% ， 若成绩大于 75 分时提高 4% （用两个 UPDATE 语句实现）。](#1-在基本表-sc-中修改-4-号课程的成绩若成绩小于等于-75-分时提高-5--若成绩大于-75-分时提高-4-用两个-update-语句实现)
 
 
 
@@ -137,5 +139,14 @@ SELECT COUNT(DISTINCT Cno) FROM SC
 ```mssql
 UPDATE SC SET GRADE=GRADE*1.05 WHERE Cno='4' AND GRADE<=75;
 UPDATE SC SET GRADE=GRADE*1.04 WHERE Cno='4' AND GRADE>75;
+```
+
+### 2 ．把低于总平均成绩的女同学成绩提高 5% 。
+
+```mssql
+UPDATE SC
+SET GRADE=GRADE*1.05
+WHERE GRADE<(SELECT AVG(GRADE) FROM SC)
+AND Sno IN (SELECT Sno FROM S WHERE SSEX=' 女')
 ```
 
