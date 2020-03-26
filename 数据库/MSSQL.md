@@ -150,3 +150,26 @@ WHERE GRADE<(SELECT AVG(GRADE) FROM SC)
 AND Sno IN (SELECT Sno FROM S WHERE SSEX=' 女')
 ```
 
+### 3 ．把选修数据库原理课不及格的成绩全改为空值。
+
+```mssql
+UPDATE SC SET GRADE=NULL
+WHERE GRADE<60 AND Cno IN ( SELECT Cno FROM C
+WHERE CNAME='数据库原理' )
+```
+
+### 4 ．把WANG 同学的学习选课和成绩全部删去。
+
+```mssql
+DELETE FROM SC WHERE Sno IN(SELECT Sno FROM S
+WHERE SNAME='WANG')
+```
+
+### 5 ．在基本表 SC 中删除尚无成绩的选课元组。
+
+```mssql
+DELETE FROM SC WHERE GRADE IS NULL
+```
+
+### 6 ．在基本表 S 中检索每一门课程成绩都大于等于 80 分的学生学号、姓名和性别， 并把检索到的值送往另一个已存在的基本表 S1 （ Sno ， SNAME ， SSEX ）。
+
