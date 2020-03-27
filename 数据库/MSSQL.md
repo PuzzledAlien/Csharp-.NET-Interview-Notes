@@ -200,3 +200,85 @@ GRADE<80 AND S.Sno=SC.Sno OR S.Sno=SC.Sno AND gradeis null) AND sno IN (SELECT s
 INSERT INTO S(Sno,SNAME,SAGE) VALUES('59','WU',18)
 ```
 
+## 三、问题描述：为管理岗位业务培训信息，建立 3 个表
+
+S (Sno,SN,SD,SA) Sno,SN,SD,SA 分别代表学号、学员姓名、所属单位、学员年龄 
+
+C (Cno,CN ) Cno,CN 分别代表课程编号、课程名称
+
+SC ( Sno,Cno,G ) Sno,Cno,G 分别代表学号、所选修的课程编号、学习成绩
+
+要求实现如下 5 个处理：
+
+### 1.使用标准 SQL 嵌套语句查询选修课程名称为’税收基础’的学员学号和姓名
+
+```mssql
+SELECT SN,SD FROM S WHERE [Sno] IN(
+SELECT [Sno] FROM C,SC
+WHERE C.[Cno]=SC.[Cno] AND CN=N'税收基础')
+```
+
+### 2.使用标准 SQL 嵌套语句查询选修课程编号为’C2’的学员姓名和所属单位
+
+```mssql
+SELECT S.SN,S.SD FROM S,SC WHERE S.[Sno]=SC.[Sno]
+AND SC.[Cno]='C2'
+```
+
+### 3.使用标准 SQL 嵌套语句查询不选修课程编号为’C5’的学员姓名和所属单位
+
+```mssql
+SELECT SN,SD FROM S WHERE [Sno] NOT IN(
+SELECT [Sno] FROM SC
+WHERE [Cno]='C5')
+```
+
+### 4.使用标准 SQL 嵌套语句查询只选修了一门课程的学员姓名和所属单位
+
+```mssql
+SELECT SN,SD FROM S WHERE [Sno] IN(
+SELECT [Sno] FROM SC INNER JOIN C ON SC.[Cno]=C.[Cno] GROUP BY [Sno]
+HAVING COUNT(*)=1)
+```
+
+### 5.查询选修了课程的学员人数
+
+```mssql
+SELECT 学员人数 = COUNT(DISTINCT[Sno]) FROM SC
+```
+
+### 6.查询选修课程超过 5 门的学员学号和所属单位
+
+```mssql
+SELECT SN,SD FROM S WHERE [Sno] IN(
+SELECT [Sno] FROM SC GROUP BY [Sno]
+HAVING COUNT(DISTINCT [Cno])>5)
+```
+
+## 四、问题描述：已知关系模式
+
+S(SNO,SNAME ） 学生关系。 SNO 为学号， SNAME 为姓名
+
+C (CNO,CNAME,TEACHER) 课程关系。 CNO 为课程号， CNAME 为课程名，
+
+TEACHER 为任课教师
+
+SC(SNO,CNO,GRADE) 选课关系。 GRADE 为成绩
+
+
+
+要求实现如下 5 个处理：
+
+### 1.找出没有选修过“李明”老师讲授课程的所有学生姓名
+
+```mssql
+SELECT sname FROM s WHERE NOT EXISTS (SELECT * FROM c,sc WHERE c.cno=sc.cno AND c.teacher=N'李明' AND s.sno=sc.sno)
+```
+
+或
+
+```mssql
+SELECT sno,sname FROM s WHERE sno NOT IN
+(SELECT sno FROM sc,c WHERE c.cno=sc.cno AND c.teacher=N'liu')
+```
+
