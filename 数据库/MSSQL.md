@@ -282,3 +282,93 @@ SELECT sno,sname FROM s WHERE sno NOT IN
 (SELECT sno FROM sc,c WHERE c.cno=sc.cno AND c.teacher=N'liu')
 ```
 
+### 2 ．列出有二门以上（含两门）不及格课程的学生姓名及其平均成绩
+
+```mssql
+SELECT S.SNO,SNAME,AVG_GRADE=AVG(SC.GRADE) FROM S,SC
+WHERE GRADE<60 AND s.sno=sc.sno GROUP BY s.SNO,s.sname
+HAVING COUNT(DISTINCT CNO)>=2
+```
+
+或
+
+```mssql
+SELECT S.SNO,S.SNAME,AVG_GRADE=AVG(SC.GRADE) FROM S,SC,(
+SELECT SNO FROM SC
+WHERE GRADE<60
+GROUP BY SNO
+HAVING COUNT(DISTINCT CNO)>=2
+)A WHERE S.SNO=A.SNO AND SC.SNO=A.SNO GROUP BY S.SNO,S.SNAME
+```
+
+### 3 ． 列出既学过“ 1 ”号课程，又学过“ 2 ”号课程的所有学生姓名
+
+  SELECT S.SNO,S.SNAME
+
+ 
+
+FROM S,sc
+
+ 
+
+where S.SNO=SC.SNO and cno='1' and s.sno in (select S.snofrom S,sc
+
+ 
+
+where S.SNO=SC.SNO and cno='2')
+
+ 
+
+或
+
+ 
+
+SELECT S.SNO,S.SNAME FROM S,(
+
+ 
+
+SELECT SC.SNO FROM SC,C
+
+ 
+
+WHERE SC.CNO=C.CNO
+
+ 
+
+AND C.cno IN('1','2') GROUP BY SNO
+
+ 
+
+HAVINGCOUNT(DISTINCT c.CNO)=2
+
+ 
+
+)SC WHERES.SNO=SC.SNO
+
+ 
+
+4 ．列出“ 1 ”号课成绩比“ 04010002 ”号同学该门课成绩高的所有学生的学号
+
+   SELECT S.SNO,S.SNAME FROM S,SC
+
+ 
+
+WHERESC.CNO='1'and SC.sNO=S.sNO
+
+ 
+
+ANDgrade>(select grade from s,sc
+
+ 
+
+wheres.SNO='04010002'and SC.CNO='1'and SC.sNO=S.sNO)
+
+5 ． 列出“ 1 ”号课成绩比“ 2 ”号课成绩高的所有学生的学号及其“ 1 ”号课和“ 2 ”号课的成绩
+
+SELECT SC1.SNO,[1 号课成绩 ]=SC1.GRADE,[2 号课成绩 ]=SC2.GRADE FROMSC SC1,SC SC2
+
+WHERE SC1.CNO='1' AND SC2.CNO='2'
+
+ANDSC1.SNO=SC2.SNO
+
+ANDSC1.GRADE>SC2.GRADE
