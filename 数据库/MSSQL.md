@@ -12,6 +12,11 @@
   - [9.统计有学生选修的课程门数。](#9统计有学生选修的课程门数)
 - [二、试用 SQL 更新语句表达对教学数据库中三个基本表 S、SC 、C的各个更新操作](#二试用-sql-更新语句表达对教学数据库中三个基本表-ssc-c的各个更新操作)
   - [1 ．在基本表 SC 中修改 4 号课程的成绩，若成绩小于等于 75 分时提高 5% ， 若成绩大于 75 分时提高 4% （用两个 UPDATE 语句实现）。](#1-在基本表-sc-中修改-4-号课程的成绩若成绩小于等于-75-分时提高-5--若成绩大于-75-分时提高-4-用两个-update-语句实现)
+  - [2 ．把低于总平均成绩的女同学成绩提高 5% 。](#2-把低于总平均成绩的女同学成绩提高-5-)
+  - [3 ．把选修数据库原理课不及格的成绩全改为空值。](#3-把选修数据库原理课不及格的成绩全改为空值)
+  - [4 ．把WANG 同学的学习选课和成绩全部删去。](#4-把wang-同学的学习选课和成绩全部删去)
+  - [5 ．在基本表 SC 中删除尚无成绩的选课元组。](#5-在基本表-sc-中删除尚无成绩的选课元组)
+  - [6 ．在基本表 S 中检索每一门课程成绩都大于等于 80 分的学生学号、姓名和性别， 并把检索到的值送往另一个已存在的基本表 S1 （ Sno ， SNAME ， SSEX ）。](#6-在基本表-s-中检索每一门课程成绩都大于等于-80-分的学生学号姓名和性别-并把检索到的值送往另一个已存在的基本表-s1--sno--sname--ssex-)
 
 
 
@@ -172,4 +177,25 @@ DELETE FROM SC WHERE GRADE IS NULL
 ```
 
 ### 6 ．在基本表 S 中检索每一门课程成绩都大于等于 80 分的学生学号、姓名和性别， 并把检索到的值送往另一个已存在的基本表 S1 （ Sno ， SNAME ， SSEX ）。
+
+```mssql
+SELECT Sno,SNAME,SSEX INTO s1 FROM student DELETE FROM s1
+INSERT INTO S1(Sno,SNAME,SSEX) SELECT Sno,SNAME,SSEX
+FROM S WHERE NOT EXISTS(SELECT * FROM SC WHERE GRADE<80 AND S.Sno=SC.Sno)
+SELECT * FROM s1
+```
+
+考虑：以上会有什么问题？
+
+```mssql
+INSERT INTO S1(Sno,SNAME,SSEX) SELECT Sno,SNAME,SSEX
+FROM S WHERE NOT EXISTS(SELECT * FROM SC WHERE
+GRADE<80 AND S.Sno=SC.Sno OR S.Sno=SC.Sno AND gradeis null) AND sno IN (SELECT sno FROM sc)
+```
+
+### 7．往基本表 S 中插入一个学生元组（ ‘ S9’，‘ WU ’，18 ）。
+
+```mssql
+INSERT INTO S(Sno,SNAME,SAGE) VALUES('59','WU',18)
+```
 
