@@ -339,3 +339,42 @@ AND SC1.SNO=SC2.SNO
 AND SC1.GRADE>SC2.GRADE
 ```
 
+## 四、通配符理解题（请说出下列通配符的含义）
+
+### 1．LIKE 'Mc%' 
+
+将搜索以字母 Mc 开头的所有字符串（如 McBadden）。
+
+### 2．LIKE '%inger' 
+
+将搜索以字母 inger 结尾的所有字符串（如 Ringer 、Stringer ）。
+
+### 3．LIKE '%en%' 
+
+将搜索在任何位置包含字母 en 的所有字符串（如 Bennet 、Green、McBadden）。
+
+ 
+
+### 4．LIKE '_heryl' 
+
+将搜索以字母 heryl 结尾的所有六个字母的名称（如Cheryl、Sheryl ）。
+
+ 
+
+### 5．LIKE '[M-Z]inger' 
+
+将搜索以字符串 inger 结尾、以从 M 到 Z 的任何单个字母开头的所有名称（如 Ringer ）。
+
+ 
+
+### 6．`LIKE 'M[^c]%' `
+
+将搜索以字母 M 开头，并且第二个字母不是 c 的所有名称（如 MacFeather ）。
+
+ 
+
+ 
+
+## 五．问答题
+
+### 1.请自定义分页存储过程！
