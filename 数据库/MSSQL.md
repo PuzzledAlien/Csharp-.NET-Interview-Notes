@@ -303,72 +303,39 @@ HAVING COUNT(DISTINCT CNO)>=2
 
 ### 3 ． 列出既学过“ 1 ”号课程，又学过“ 2 ”号课程的所有学生姓名
 
-  SELECT S.SNO,S.SNAME
-
- 
-
+```mssql
+SELECT S.SNO,S.SNAME
 FROM S,sc
-
- 
-
-where S.SNO=SC.SNO and cno='1' and s.sno in (select S.snofrom S,sc
-
- 
-
-where S.SNO=SC.SNO and cno='2')
-
- 
+WHERE S.SNO=SC.SNO AND cno='1' AND s.sno IN (SELECT S.sno FROM S,sc
+WHERE S.SNO=SC.SNO AND cno='2')
+```
 
 或
 
- 
-
+ ```mssql
 SELECT S.SNO,S.SNAME FROM S,(
-
- 
-
 SELECT SC.SNO FROM SC,C
-
- 
-
 WHERE SC.CNO=C.CNO
-
- 
-
 AND C.cno IN('1','2') GROUP BY SNO
+HAVING COUNT(DISTINCT c.CNO)=2
+)SC WHERE S.SNO=SC.SNO
+ ```
 
- 
+### 4 ．列出“ 1 ”号课成绩比“ 04010002 ”号同学该门课成绩高的所有学生的学号
 
-HAVINGCOUNT(DISTINCT c.CNO)=2
+```mssql
+SELECT S.SNO,S.SNAME FROM S,SC
+WHERE SC.CNO='1'and SC.sNO=S.sNO
+AND grade>(SELECT grade FROM s,sc
+WHERE s.SNO='04010002' AND SC.CNO='1' AND SC.sNO=S.sNO)
+```
 
- 
+### 5 ． 列出“ 1 ”号课成绩比“ 2 ”号课成绩高的所有学生的学号及其“ 1 ”号课和“ 2 ”号课的成绩
 
-)SC WHERES.SNO=SC.SNO
-
- 
-
-4 ．列出“ 1 ”号课成绩比“ 04010002 ”号同学该门课成绩高的所有学生的学号
-
-   SELECT S.SNO,S.SNAME FROM S,SC
-
- 
-
-WHERESC.CNO='1'and SC.sNO=S.sNO
-
- 
-
-ANDgrade>(select grade from s,sc
-
- 
-
-wheres.SNO='04010002'and SC.CNO='1'and SC.sNO=S.sNO)
-
-5 ． 列出“ 1 ”号课成绩比“ 2 ”号课成绩高的所有学生的学号及其“ 1 ”号课和“ 2 ”号课的成绩
-
-SELECT SC1.SNO,[1 号课成绩 ]=SC1.GRADE,[2 号课成绩 ]=SC2.GRADE FROMSC SC1,SC SC2
-
+```mssql
+SELECT SC1.SNO,[1 号课成绩 ]=SC1.GRADE,[2 号课成绩 ]=SC2.GRADE FROM SC SC1,SC SC2
 WHERE SC1.CNO='1' AND SC2.CNO='2'
+AND SC1.SNO=SC2.SNO
+AND SC1.GRADE>SC2.GRADE
+```
 
-ANDSC1.SNO=SC2.SNO
-
-ANDSC1.GRADE>SC2.GRADE
