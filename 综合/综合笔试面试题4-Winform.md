@@ -4,7 +4,7 @@
 
 ## 一.填空题
 
-1.能用foreach遍历访问的对象需要实现 <u>IEnumerable</u> 接口或声明 <u>GetEnumerator</u> 方法的类型
+1.能用foreach遍历访问的对象需要实现 <span style="border-bottom:2px dashed black;">IEnumerable</span> 接口或声明 <u>GetEnumerator</u> 方法的类型
 
 2.c#中的三元运算符是 <u>?</u> 
 
